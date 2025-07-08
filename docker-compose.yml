@@ -1,0 +1,35 @@
+services:
+
+  ltijs-demo-server:
+    build: .
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      DB_HOST: postgres
+      DB_NAME: ltidb
+      DB_USER: user
+      DB_PASSWORD: pass
+      LTI_KEY: LTIKEY
+      NODE_ENV: production
+    depends_on:
+      - postgres
+    volumes:
+      - /app/node_modules
+      - ./platforms.yml:/app/platforms.yml
+
+  postgres:
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: ltidb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
